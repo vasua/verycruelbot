@@ -6,10 +6,11 @@ import datetime
 """
 import telepot
 import os
-from bottle import run
+from bottle import run, request, post
 from telepot.delegate import per_chat_id, create_open
 
 
+@post("")
 class VeryCruel(telepot.helper.ChatHandler):
 
     def __init__(self, seed_tuple, timeout):
@@ -45,11 +46,11 @@ class VeryCruel(telepot.helper.ChatHandler):
             bot.notifyOnMessage(run_forever=True)
     """
 
+run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
+
 TOKEN = '148865285:AAHvwDHJGVrSzEGJ_ToGUxk1RWclvX2L_W4'
 
 bot = telepot.DelegatorBot(TOKEN, [
     (per_chat_id(), create_open(VeryCruel, timeout=1)),
 ])
 bot.notifyOnMessage(run_forever=True)
-
-#run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
