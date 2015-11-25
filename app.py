@@ -20,6 +20,7 @@ class VeryCruel(telepot.helper.ChatHandler):
             self.sender.sendMessage('ИДИ ФПИЗДУ ПИДАРАС', reply_to_message_id=m.message_id)
             return True
         else:
+            self.sender.sendMessage('А это у нас был %s' % m.from_.first_name)
             return False
 
     def reply_to_badgay(self, content_type, m):
@@ -51,4 +52,4 @@ bot = telepot.DelegatorBot(TOKEN, [
 ])
 bot.notifyOnMessage(run_forever=True)
 
-run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
+#run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
