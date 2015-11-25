@@ -1,33 +1,37 @@
+"""
 import sys
-import asyncio
+import time
+import random
+import datetime
+"""
 import telepot
-from telepot.delegate import per_chat_id
-from telepot.async.delegate import create_open
-
-"""
-$ python3.4 countera.py <token>
-Count number of messages. Start over if silent for 10 seconds.
-"""
+from telepot.delegate import per_chat_id, create_open
 
 
-class MessageCounter(telepot.helper.ChatHandler):
+class VeryCruel(telepot.helper.ChatHandler):
+
     def __init__(self, seed_tuple, timeout):
-        super(MessageCounter, self).__init__(seed_tuple, timeout)
-        self._count = 0
+        super(VeryCruel, self).__init__(seed_tuple,timeout)
 
-    @asyncio.coroutine
+    def reply_to_serjant(self,m):
+        self.sender.sendMessage('Сообщение получено от %s c id %s' % (m.from_, m.from_.id))
+
     def on_message(self, msg):
-        self._count += 1
-        yield from self.sender.sendMessage(self._count)
+        content_type, chat_type, chat_id = telepot.glance2(msg)
+        m = telepot.namedtuple(msg, 'Message')
+
+        if chat_id < 0:
+            # public chat
+            self.reply_to_serjant(m)
+        else:
+            # private conversation
+            if content_type == 'text':
+                if 'хуй' in m.text:
+                    self.sender.sendMessage('НЕ МАТЕРИСЬ, ПИДАРАС!', reply_to_message_id=m.message_id)
 
 TOKEN = '148865285:AAHvwDHJGVrSzEGJ_ToGUxk1RWclvX2L_W4'
 
-bot = telepot.async.DelegatorBot(TOKEN, [
-    (per_chat_id(), create_open(MessageCounter, timeout=10)),
+bot = telepot.DelegatorBot(TOKEN, [
+    (per_chat_id(), create_open(VeryCruel, timeout=15)),
 ])
-
-loop = asyncio.get_event_loop()
-loop.create_task(bot.messageLoop())
-print('Listening ...')
-
-loop.run_forever()
+bot.notifyOnMessage(run_forever=True)
