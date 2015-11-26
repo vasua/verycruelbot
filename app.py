@@ -32,7 +32,7 @@ class VeryCruel(telepot.helper.ChatHandler):
 
         if chat_id < 0:
             # public chat
-            if not self.reply_to_serjant(content_type, m):
+            if not self.reply_to_kek(content_type, m):
                 self.reply_to_badgay(content_type, m)
         else:
             # private conversation
