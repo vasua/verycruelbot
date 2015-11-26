@@ -5,23 +5,24 @@ import random
 import datetime
 """
 import telepot
-import os
-from bottle import run, request, post
+# import os
+# from bottle import run
 from telepot.delegate import per_chat_id, create_open
 
 
-@post("/")
 class VeryCruel(telepot.helper.ChatHandler):
 
     def __init__(self, seed_tuple, timeout):
         super(VeryCruel, self).__init__(seed_tuple,timeout)
 
     def reply_to_serjant(self, m):
+
+        self.sender.sendMessage('А это у нас был %s' % m.from_.first_name)
+
         if m.from_.first_name == 'Сержант':
             self.sender.sendMessage('ИДИ ФПИЗДУ ПИДАРАС', reply_to_message_id=m.message_id)
             return True
         else:
-            self.sender.sendMessage('А это у нас был %s' % m.from_.first_name)
             return False
 
     def reply_to_badgay(self, content_type, m):
@@ -52,5 +53,3 @@ bot = telepot.DelegatorBot(TOKEN, [
     (per_chat_id(), create_open(VeryCruel, timeout=1)),
 ])
 bot.notifyOnMessage(run_forever=True)
-
-run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
